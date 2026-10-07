@@ -234,6 +234,25 @@ function bootstrap(): void {
     else showWindow();
   }
 
+  /** mouse clicks fall through the overlay while ui.clickThrough is on */
+  function applyClickThrough(): void {
+    if (!win) return;
+    try {
+      win.setIgnoreMouseEvents(!!settings.data.ui.clickThrough, { forward: true });
+    } catch (e) {
+      console.warn('[passthrough] apply failed:', (e as Error).message);
+    }
+  }
+
+  /** flip the persisted click-through state, apply it, tell the renderer */
+  function toggleClickThrough(): boolean {
+    settings.data.ui.clickThrough = !settings.data.ui.clickThrough;
+    settings.save();
+    applyClickThrough();
+    win?.webContents.send(IPC.passThroughChanged, settings.data.ui.clickThrough);
+    return settings.data.ui.clickThrough;
+  }
+
   function trayState(): TrayMenuState {
     return { windowVisible: !!win?.isVisible(), capturing };
   }
@@ -328,6 +347,9 @@ function bootstrap(): void {
         const ok = globalShortcut.register(shot, () => win?.webContents.send(IPC.shotHotkey));
         if (!ok) console.warn(`[main] shot hotkey ${shot} registration failed (in use?)`);
       }
+      const ptHot = settings.data.ui.hotkeyPassThrough ?? 'Control+D';
+      const okPt = globalShortcut.register(ptHot, () => toggleClickThrough());
+      if (!okPt) console.warn(`[main] hotkey ${ptHot} registration failed (in use?)`);
     } catch (e) {
       console.warn('[main] hotkey register error:', (e as Error).message);
     }
@@ -362,6 +384,7 @@ function bootstrap(): void {
       width: startDisp.workArea.width,
       height: startDisp.workArea.height,
     });
+    applyClickThrough();
     win.setContentProtection(settings.data.ui.stealth);
     win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
     win.webContents.on('will-navigate', (e) => e.preventDefault());
@@ -645,6 +668,9 @@ function bootstrap(): void {
       }
       if (patch.ui?.stealth !== undefined) {
         win?.setContentProtection(patch.ui.stealth);
+      }
+      if (patch.ui?.clickThrough !== undefined) {
+        applyClickThrough();
       }
       // the tray menu is a snapshot: rebuild it in the newly chosen language
       if (patch.ui?.lang !== undefined) refreshTray();
@@ -934,6 +960,7 @@ function bootstrap(): void {
       win?.setContentProtection(on);
       return on;
     });
+    ipcMain.handle(IPC.passThroughSet, () => toggleClickThrough());
     ipcMain.on(IPC.winHide, () => win?.hide());
     ipcMain.on(IPC.appQuit, () => app.quit());
 

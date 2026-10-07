@@ -83,6 +83,7 @@ export function App() {
   const [continuous, setContinuous] = useState(true); // 持续答：启动即默认开启（用户偏好 2026-10-07）
   const [mics, setMics] = useState<{ deviceId: string; label: string }[]>([]);
   const [micActive, setMicActive] = useState(false);
+  const [passThrough, setPassThrough] = useState(false);
   const [partials, setPartials] = useState<{ them?: string; me?: string }>({});
   const [sessions, setSessions] = useState<StoredSession[]>([]);
   const [currentId, setCurrentId] = useState<string>('');
@@ -357,6 +358,7 @@ export function App() {
     });
 
     const offShot = window.mc.onShotHotkey(() => void doRegionShot());
+    const offPt = window.mc.onPassThroughChanged(setPassThrough);
 
     window.__mcAutoStart = () => void startCapture();
     // visual-QA hooks (MC_MAIN_SHOT in electron/main.ts): open a panel from the
@@ -367,6 +369,7 @@ export function App() {
       off();
       offLlm();
       offShot();
+      offPt();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -382,6 +385,7 @@ export function App() {
   useEffect(() => {
     const ui = settings?.ui;
     if (!ui) return;
+    setPassThrough(!!ui.clickThrough);
     document.documentElement.dataset.fontScale = ui.fontScale ?? 'medium';
     const apply = () => {
       const mode = ui.theme ?? 'dark';
@@ -801,6 +805,13 @@ export function App() {
             }
           >
             {t.titlebar.stealth(!!settings?.ui.stealth)}
+          </button>
+          <button
+            className={passThrough ? 'btn btn-on' : 'btn'}
+            onClick={() => void window.mc.setPassThrough().then(setPassThrough)}
+            title={t.titlebar.passThroughTitle}
+          >
+            {t.titlebar.passThrough(passThrough)}
           </button>
           <button className="btn" onClick={() => setShowHud((v) => !v)} title={t.titlebar.hudTitle}>
             HUD

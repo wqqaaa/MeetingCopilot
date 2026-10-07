@@ -226,6 +226,10 @@ export interface SettingsFile {
     autoLaunch?: boolean;
     /** the "still running in the tray" balloon was shown once; never repeated */
     trayNoticeShown?: boolean;
+    /** mouse clicks pass through the overlay (toggle via hotkeyPassThrough) */
+    clickThrough?: boolean;
+    /** global hotkey to toggle click-through */
+    hotkeyPassThrough?: string;
   };
   audio: {
     /** input used for the other-party channel on platforms without loopback */
@@ -296,6 +300,7 @@ export interface PublicSettings {
     stealth: boolean;
     hotkeyToggle: string;
     hotkeyShot: string;
+    clickThrough?: boolean;
     opacity: number;
     fontScale: FontScale;
     theme: ThemeMode;
@@ -351,6 +356,7 @@ export interface SettingsPatch {
     stealth?: boolean;
     hotkeyToggle?: string;
     hotkeyShot?: string;
+    clickThrough?: boolean;
     opacity?: number;
     fontScale?: FontScale;
     theme?: ThemeMode;
@@ -536,6 +542,10 @@ export const IPC = {
   regionCancel: 'region:cancel',
   /** invoke: (boolean) => boolean — toggles content protection live */
   stealthSet: 'stealth:set',
+  /** invoke: () => boolean — toggle mouse click-through; returns the new state */
+  passThroughSet: 'passthrough:set',
+  /** main -> renderer: click-through was toggled (global hotkey); carries new state */
+  passThroughChanged: 'passthrough:changed',
   /** send: hide window */
   winHide: 'win:hide',
   /** send: quit app (clean) */

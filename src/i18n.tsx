@@ -54,6 +54,8 @@ const zh = {
     micDefault: '默认麦',
     stealth: (on: boolean) => `隐身${on ? '开' : '关'}`,
     stealthTitle: '隐身：窗口对录屏/共享/截图不可见',
+    passThrough: (on: boolean) => `穿透${on ? '开' : '关'}`,
+    passThroughTitle: '鼠标穿透：点击穿过窗口直达下层应用（Ctrl+D 切换）',
     stealthMacTitle: '采集保护：macOS 新版 ScreenCaptureKit 仍可能捕获窗口，不能保证完全隐身',
     hudTitle: '延迟 HUD',
     settingsTitle: '设置',
@@ -476,6 +478,8 @@ const en: Dict = {
     micDefault: 'Default mic',
     stealth: (on: boolean) => `Stealth:${on ? 'On' : 'Off'}`,
     stealthTitle: 'Stealth: window is invisible to recording/sharing/screenshots',
+    passThrough: (on: boolean) => `Pass-through:${on ? 'On' : 'Off'}`,
+    passThroughTitle: 'Mouse click-through: clicks fall through to apps beneath (Ctrl+D to toggle)',
     stealthMacTitle:
       'Capture protection: recent macOS ScreenCaptureKit versions may still capture this window; full stealth is not guaranteed',
     hudTitle: 'Latency HUD',

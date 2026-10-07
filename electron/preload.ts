@@ -33,6 +33,8 @@ export interface McApi {
   loadSessions(): Promise<SessionsFile>;
   saveSessions(data: SessionsFile): void;
   setStealth(on: boolean): Promise<boolean>;
+  setPassThrough(): Promise<boolean>;
+  onPassThroughChanged(cb: (on: boolean) => void): () => void;
   sendPcm(buf: ArrayBuffer, captureTs: number, channel: 'them' | 'me'): void;
   captureStarted(): void;
   captureStopped(): void;
@@ -98,6 +100,12 @@ const api: McApi = {
   loadSessions: () => ipcRenderer.invoke(IPC.sessionsLoad),
   saveSessions: (data) => ipcRenderer.send(IPC.sessionsSave, data),
   setStealth: (on) => ipcRenderer.invoke(IPC.stealthSet, on),
+  setPassThrough: () => ipcRenderer.invoke(IPC.passThroughSet),
+  onPassThroughChanged: (cb) => {
+    const listener = (_e: Electron.IpcRendererEvent, on: boolean) => cb(on);
+    ipcRenderer.on(IPC.passThroughChanged, listener);
+    return () => ipcRenderer.removeListener(IPC.passThroughChanged, listener);
+  },
   sendPcm: (buf, captureTs, channel) => ipcRenderer.send(IPC.capturePcm, buf, captureTs, channel),
   captureStarted: () => ipcRenderer.send(IPC.captureStarted),
   captureStopped: () => ipcRenderer.send(IPC.captureStopped),

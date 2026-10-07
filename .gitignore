@@ -16,3 +16,8 @@ models/
 HANDOFF.md
 PLAN.en.md
 PLAN.zh.md
+
+# local workspace / IDE / generated scratch
+.idea/
+.workbuddy/
+generated-images/

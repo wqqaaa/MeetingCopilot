@@ -354,6 +354,14 @@ function bootstrap(): void {
       },
     });
     win.setAlwaysOnTop(true, 'screen-saver');
+    // 启动即铺满工作区（紧贴任务栏，多显示器跟随光标所在屏）
+    const startDisp = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+    win.setBounds({
+      x: startDisp.workArea.x,
+      y: startDisp.workArea.y,
+      width: startDisp.workArea.width,
+      height: startDisp.workArea.height,
+    });
     win.setContentProtection(settings.data.ui.stealth);
     win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
     win.webContents.on('will-navigate', (e) => e.preventDefault());

@@ -370,12 +370,15 @@ function bootstrap(): void {
       // replay cached ASR state for late-attaching renderer
       if (asr.lastReady) win?.webContents.send(IPC.asrEvent, asr.lastReady);
       if (asr.lastStatus) win?.webContents.send(IPC.asrEvent, asr.lastStatus);
-      // 每次启动自动进入持续答模式（用户偏好 2026-10-07）：executeJavaScript(code, true)
-      // 顺便提供 getDisplayMedia 所需的 user gesture（原 E2E 专用路径改为常驻）。
-      void win?.webContents.executeJavaScript(
-        'window.__mcAutoStart && window.__mcAutoStart()',
-        true,
-      );
+      if (process.env.MC_AUTOSTART === '1') {
+        // executeJavaScript(code, true) supplies the user gesture that
+        // getDisplayMedia needs — used by the E2E smoke test.
+        // （持续答默认开已由 renderer 的 continuous 初值承担；采集仍由用户手动开始）
+        void win?.webContents.executeJavaScript(
+          'window.__mcAutoStart && window.__mcAutoStart()',
+          true,
+        );
+      }
       // E2E: exercise the FULL renderer->IPC->main->LLM->stream->renderer path.
       if (process.env.MC_E2E_LLM) {
         const q = process.env.MC_E2E_LLM;

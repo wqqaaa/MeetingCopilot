@@ -534,6 +534,8 @@ export const IPC = {
   sessionsSave: 'sessions:save',
   /** invoke: () => string|null — full-screen capture, drag a region (stealth overlay), returns cropped dataURL */
   regionPick: 'region:pick',
+  /** invoke: () => string|null — capture the ENTIRE screen with no selection UI, returns dataURL */
+  shotFullScreen: 'shot:fullscreen',
   /** invoke (overlay→main): () => string|null — the captured full-screen image to draw */
   regionImage: 'region:image',
   /** send (overlay→main): (rect) — chosen region */

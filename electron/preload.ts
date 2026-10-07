@@ -51,6 +51,7 @@ export interface McApi {
   }): void;
   /** capture full screen, drag a stealth region overlay; returns cropped dataURL or null */
   pickRegion(): Promise<string | null>;
+  shotFullScreen(): Promise<string | null>;
   /** overlay-only: fetch the captured background image */
   regionImage(): Promise<string | null>;
   /** overlay-only: report chosen rect */
@@ -119,6 +120,7 @@ const api: McApi = {
   llmAsk: (payload) => ipcRenderer.send(IPC.llmAsk, payload),
   shotAsk: (payload) => ipcRenderer.send(IPC.shotAsk, payload),
   pickRegion: () => ipcRenderer.invoke(IPC.regionPick),
+  shotFullScreen: () => ipcRenderer.invoke(IPC.shotFullScreen),
   regionImage: () => ipcRenderer.invoke(IPC.regionImage),
   regionRect: (r) => ipcRenderer.send(IPC.regionRect, r),
   regionCancel: () => ipcRenderer.send(IPC.regionCancel),

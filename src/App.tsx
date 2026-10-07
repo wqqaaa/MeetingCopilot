@@ -247,10 +247,13 @@ export function App() {
     [appendTurn, currentMaterial, maybeTitle],
   );
 
-  /** region screenshot flow (📷 button or hotkey): drag a region, then ask */
+  /** 全屏截图直答（用户偏好 2026-10-07）：无选区 UI，固定提示词让模型自己找题 */
+  const FULL_SHOT_QUESTION =
+    '这是我的屏幕截图。请找到屏幕上的面试题（或面试官正在问的内容），直接给出我可以照着念的回答要点。';
+
   const doRegionShot = useCallback(async () => {
-    const img = await window.mc.pickRegion();
-    if (img) askShot('', img);
+    const img = await window.mc.shotFullScreen();
+    if (img) askShot(FULL_SHOT_QUESTION, img);
   }, [askShot]);
 
   // ---- boot: load settings + sessions ----

@@ -896,6 +896,20 @@ function bootstrap(): void {
       f?.(null);
     });
 
+    // ---- full-screen shot with NO selection UI (用户偏好 2026-10-07):
+    // capture everything, the fixed vision prompt finds the question itself.
+    // The main window is content-protected (stealth), so it never appears in
+    // its own screenshot, and no overlay ever shows during screen sharing. ----
+    ipcMain.handle(IPC.shotFullScreen, async () => {
+      const disp = screen.getPrimaryDisplay();
+      const sf = disp.scaleFactor;
+      const w = Math.round(disp.size.width * sf);
+      const h = Math.round(disp.size.height * sf);
+      const sources = await desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: w, height: h } });
+      const src = sources.find((s) => s.display_id === String(disp.id)) ?? sources[0];
+      return src ? src.thumbnail.toDataURL() : null;
+    });
+
     ipcMain.handle(IPC.regionPick, async () => {
       const disp = screen.getPrimaryDisplay();
       const sf = disp.scaleFactor;

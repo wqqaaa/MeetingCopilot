@@ -80,7 +80,7 @@ export function App() {
   const [showHelp, setShowHelp] = useState(false);
   const [showHud, setShowHud] = useState(true);
   const [hud, setHud] = useState<HudStats>({ count: 0 });
-  const [continuous, setContinuous] = useState(false);
+  const [continuous, setContinuous] = useState(true); // 持续答：启动即默认开启（用户偏好 2026-10-07）
   const [mics, setMics] = useState<{ deviceId: string; label: string }[]>([]);
   const [micActive, setMicActive] = useState(false);
   const [partials, setPartials] = useState<{ them?: string; me?: string }>({});

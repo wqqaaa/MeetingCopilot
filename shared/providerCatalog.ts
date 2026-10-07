@@ -368,6 +368,19 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
   },
   // ---- segment (non-streaming) ASR ----
   {
+    id: 'aliyun.cn.asr.qwen-audio-flash',
+    providerId: 'aliyun-dashscope-cn',
+    capability: 'asr-segment',
+    nameZh: '阿里云 qwen-audio-3.0-asr-flash（分段识别）',
+    nameEn: 'Aliyun qwen-audio-3.0-asr-flash (segment ASR)',
+    descriptionZh: '按句返回的分段识别，DashScope 原生协议；Token Plan 订阅额度可直接抵扣。',
+    descriptionEn: 'Per-sentence segment ASR over the DashScope native API; Token Plan credits apply.',
+    baseUrl: 'https://dashscope.aliyuncs.com',
+    model: 'qwen-audio-3.0-asr-flash',
+    region: 'cn',
+    help: aliyunCnHelp,
+  },
+  {
     id: 'mimo.asr.segment',
     providerId: 'mimo',
     capability: 'asr-segment',
